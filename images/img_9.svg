@@ -1,12 +1,2 @@
-<?xml version='1.0' encoding='utf-8'?><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 31 22" height="31" width="22">
-<rect x="0" y="0" width="22" height="31" style="fill:#006633;" />
-<rect x="3" y="4" width="16" height="5" style="fill:#ffffff;" />
-<rect x="3" y="12" width="4" height="4" style="fill:#ffffff;" id="calconedot" />
-<use xlink:href="#calconedot" x="6" />
-<use xlink:href="#calconedot" x="12" />
-<use xlink:href="#calconedot" y="6" />
-<use xlink:href="#calconedot" x="6" y="6" />
-<use xlink:href="#calconedot" x="12" y="6" />
-<use xlink:href="#calconedot" y="12" />
-<rect x="9" y="24" width="10" height="4" style="fill:#ffffff;" />
-</svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="288" height="28" version="1.1" viewBox="0 0 76.2 7.4083" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -289.59)"><text x="-0.77652454" y="296.87943" fill="#000000" font-family="sans-serif" font-size="10.583px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="-0.77652454" y="296.87943" fill="#ffffff" font-family="Arial" stroke-width=".26458" style="line-height:1"><tspan font-size="9.8778px">Unit</tspan><tspan fill="#33ff66" font-family="Arial" font-size="9.8778px" style="line-height:1">Converters</tspan><tspan font-size="6.35px">.net</tspan></tspan></text></g></svg>
